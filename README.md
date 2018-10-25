@@ -10,7 +10,7 @@ Cacher Run Server
 [![License](https://img.shields.io/npm/l/@cacherapp/run-server.svg)](https://github.com/cacherapp/cacher-run-server/blob/master/package.json)
 
 The Cacher Run Server is a standalone [Socket.io](https://socket.io/)-based server that allows clients to run shell
-commands via Websocket messages. It is used primarily to run snippets of code on the local user's machine via 
+commands via Websocket messages. It is used primarily to run snippets of code on the user's local machine via 
 [Cacher](https://www.cacher.io/).
 
 Demo of a [Cacher](https://www.cacher.io/) snippet file executing on a Run Server:
@@ -112,16 +112,16 @@ Once you've logged in, open the Run Server dialog. Input your server's port and 
 
 ## Editing the Configuration
 
-The Run Server uses 2 config files to define the set of rules which govern how different file extensions are mapped
+The Run Server uses two Javascript-based config files to define the set of rules which govern how different file extensions are mapped
 to shell commands:
 
 - [config.default.js](src/config/config.default.js) - The default set of file types -> shell command mappings. While
-this file is copied to the Cacher directory as `~/.cacher/run-server.config.js`, you should never edit this file. If you 
-would like to add a file handler to this config (and let everyone use it), please submit a pull request instead. See 
+this config is copied to the Cacher directory as `~/.cacher/run-server.config.js`, you should never edit this file. If 
+you would like to add a file handler to this config (and let everyone use it), please submit a pull request instead. See 
 the [Contributing](#contributing) section below.
 
 - **`~/.cacher/run-server.user.config.js`** - Edit this file to add or overwrite handlers for file extensions. Here are a
-few examples of new functions you might add to handle file types:
+few examples of functions you might add to handle new file types:
 
 **Add command for `.awesome` file extension.**
 
@@ -194,19 +194,17 @@ module.exports = {
 
 **`pattern: (String|Function)`**
 
-Indicates whether to execute the `run()` callback for the given command. Pass it either a 
-[Regex](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) string or function that 
-takes a `command` object and returns a boolean. 
+Indicates whether to execute the `run()` callback for the given command.
 
-Pass it:
+Pass it either:
 - [Regex](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) string that matches against
 the filename.
 - Function that takes a `command` object and returns a boolean. 
 
 Examples:
 ```javascript
-// Matches files which end in .rb
-pattern: '/\.rb$/'
+// Match files which end in .rb
+pattern: '\.rb$'
 
 // Match command which has "foobar" in the file's content
 pattern: (command) => command.file.content.indexOf('foobar') >= 0
@@ -217,8 +215,8 @@ pattern: (command) => command.file.content.indexOf('foobar') >= 0
 **`run: (Function)`**
 
 Takes `command`, `filepath` and `args`. Returns a string that is run against the user's shell. For interpreted 
-(non-compiled) languages, you'd generally have the function return `[interpreter] "${filepath}""`. For compiled
-languages, you'll need to compile the first before running the binary.
+(non-compiled) languages, you'd generally have the function return `[interpreter] "${filepath}"`. For compiled
+languages, you'll need to compile the source file first before executing the binary.
 
 Examples:
 ```javascript
@@ -236,7 +234,7 @@ run: (command, filepath, args) => {
 
 **`timestamp: (Boolean)`**
 
-Whether to append a epoch timestamp to the end of the filename. This helps to prevent files from being overwritten in
+Whether to append an epoch timestamp to the end of the filename. This helps to prevent files from being overwritten in
 the `~/.cacher/run` folder. You'll want to disable this for some languages which require a strict match between the
 filename and the compiled binary. 
 
@@ -268,23 +266,28 @@ Additional arguments sent to the `run` callback function.
 
 Properties:
 
-- `runDir` - The fully resolved path to `~/.cacher/run`.
-- `baseFilename` - The filename without the file extension. This is necessary sometimes to execute the binary. 
+- `runDir` - The fully-resolved path to `~/.cacher/run`.
+- `baseFilename` - The filename without the file extension. This is sometimes necessary to execute the binary. 
 (i.e. `java "${args.baseFilename}"`)
 
 ### Testing your changes
 
 #### With built-in server on Cacher's Desktop Client
 
-1. Stop the built-in server.
+1. Stop the built-in server (if running).
 
 ![Stop Run Server](images/stop-run-server.png) 
 
-2. Make the necessary changes to `~/.cacher/run-server.config.js`.
+2. Make your changes to `~/.cacher/run-server.config.js`.
 
 3. Start the built-in server again.
 
 ![Start Run Server](images/start-run-server.png) 
+
+#### Debugging
+
+If you run into issues with the server not starting or if your file handler does not perform as you expected, debug the
+problem via the log file at `~/.cacher/logs/run-server.log`.
 
 #### With standalone server
 
@@ -299,7 +302,7 @@ npm i -g @cacherapp/cli
 3. Start the server:
 
 ```bash
-cacher run-server:start
+cacher run-server:start --verbose
 ```
 
 Make note of the server port and token, then connect with the Cacher client.
