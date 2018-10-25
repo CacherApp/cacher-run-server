@@ -8,7 +8,7 @@ Cacher Run Server
 [![License](https://img.shields.io/npm/l/@cacherapp/run-server.svg)](https://github.com/cacherapp/cacher-run-server/blob/master/package.json)
 
 The Cacher Run Server is a standalone [Socket.io](https://socket.io/)-based server that allows clients to run shell
-commands via Websocket messages. It is used primarily to run snippets of code on the user's local machine via 
+commands via Websocket messages. It is used primarily to run code snippets on the user's local machine via 
 [Cacher](https://www.cacher.io/).
 
 Demo of a [Cacher](https://www.cacher.io/) snippet file executing on a Run Server:
@@ -41,7 +41,7 @@ dialog and click **Start Server**:
 
 ### Standalone Mode
 
-Start the Run Server in standalone mode if you need more control over its configuration.
+Start the Run Server in standalone mode if you require more control over its configuration.
 
 #### Using the Cacher CLI
 
@@ -67,15 +67,15 @@ cacher run-server:start -p 39135 -t 4D5dzRGliafhGg~btNlR9 -o file:// -v
 ngrok http 39135
 ```
 
-#### Via Javascript
+#### Start via custom script
 
-Install the NPM package to your project.
+Install `run-server` package for your Node project.
 
 ```bash
 npm i --save @cacherapp/run-server
 ```
 
-A few examples (in Javascript) of starting the Run Server:
+Examples of starting the Run Server:
 
 ```javascript
 // examples.js
@@ -98,8 +98,9 @@ const RunServer = require('@cacherapp/run-server').RunServer;
 )).start(); 
 ```
 
+See [server.model.ts](src/models/server.model.ts) for details on options.
 
-**Connecting to the standlone server**
+**Connecting to the standalone server**
 
 You'll need either the [Cacher Web App](http://app.cacher.io/) or the [Desktop Client](https://cacher.io?dl=auto) in 
 order to connect to a standalone Run Server.
@@ -118,8 +119,8 @@ this config is copied to the Cacher directory as `~/.cacher/run-server.config.js
 you would like to add a file handler to this config (and let everyone use it), please submit a pull request instead. See 
 the [Contributing](#contributing) section below.
 
-- **`~/.cacher/run-server.user.config.js`** - Edit this file to add or overwrite handlers for file extensions. Here are a
-few examples of functions you might add to handle new file types:
+- **`~/.cacher/run-server.user.config.js`** - Edit this file to add or overwrite file extension handlers on your local 
+machine. Here are some examples of functions you might add to handle new file types:
 
 **Add command for `.awesome` file extension.**
 
@@ -161,7 +162,7 @@ module.exports = {
 }
 ```
 
-**Match Javascript file by both file extension (.js) and content. Calls `nvm use [version]` before executing script.**
+**Match Javascript files by `.js` extension and file content. Calls `nvm use [version]` before execution.**
 
 ```javascript
 // ~/.cacher/run-server.user.config.js
@@ -192,12 +193,12 @@ module.exports = {
 
 **`pattern: (String|Function)`**
 
-Indicates whether to execute the `run()` callback for the given command.
+Indicates whether to execute the `run:` callback for the given command.
 
 Pass it either:
 - [Regex](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) string that matches against
 the filename.
-- Function that takes a `command` object and returns a boolean. 
+- Function that takes a `command` object and returns a boolean to indicate whether the rule should match. 
 
 Examples:
 ```javascript
@@ -212,9 +213,9 @@ pattern: (command) => command.file.content.indexOf('foobar') >= 0
 
 **`run: (Function)`**
 
-Takes `command`, `filepath` and `args`. Returns a string that is run against the user's shell. For interpreted 
-(non-compiled) languages, you'd generally have the function return `[interpreter] "${filepath}"`. For compiled
-languages, you'll need to compile the source file first before executing the binary.
+Takes as input `command`, `filepath` and `args` and returns a string to be executed on the user's shell. Rules matched 
+against interpreted (non-compiled) languages generally return `[interpreter] "${filepath}"`. Rules matched with compiled
+languages will compile the source file first before executing the binary.
 
 Examples:
 ```javascript
@@ -232,9 +233,9 @@ run: (command, filepath, args) => {
 
 **`timestamp: (Boolean)`**
 
-Whether to append an epoch timestamp to the end of the filename. This helps to prevent files from being overwritten in
-the `~/.cacher/run` folder. You'll want to disable this for some languages which require a strict match between the
-filename and the compiled binary. 
+Set to `true` to append an epoch timestamp to the end of the filename. This helps to prevent files from being overwritten 
+in the `~/.cacher/run` folder. Set to `false` for languages which require a strict match between the filename and the 
+compiled binary. (i.e. Java, Haxe) 
 
 ### Arguments
 
@@ -253,19 +254,18 @@ Properties:
 
 **`filepath (String)`**
 
-Passed to the `run:` callback. The full path for the file to be run (in the `~/.cacher/run` folder). If `timestamp` is 
-`true`, this path includes an appended timestamp.
+Passed to the `run:` callback. The full path for the file to be run (in the `~/.cacher/run` folder).
 
 ---
 
 **`args (Object)`**
 
-Additional arguments sent to the `run` callback function.
+Additional arguments sent to the `run:` callback function.
 
 Properties:
 
 - `runDir` - The fully-resolved path to `~/.cacher/run`.
-- `baseFilename` - The filename without the file extension. This is sometimes necessary to execute the binary. 
+- `baseFilename` - The filename without file extension. This is sometimes necessary to execute the compiled binary. 
 (i.e. `java "${args.baseFilename}"`)
 
 ### Testing your changes
@@ -284,8 +284,8 @@ Properties:
 
 #### Debugging
 
-If you run into issues with the server not starting or if your file handler does not perform as you expected, debug the
-problem via the log file at `~/.cacher/logs/run-server.log`.
+If you run into issues with the server not starting or if your file handler does not perform as expected, debug the
+problem via the log file: `~/.cacher/logs/run-server.log`.
 
 #### With standalone server
 
@@ -323,7 +323,7 @@ Install [Typescript](https://www.npmjs.com/package/typescript) globally:
 npm i -g typescript
 ```
 
-Install packages and start development server:
+Install packages and start the development server:
 
 ```shell
 npm i
@@ -332,9 +332,9 @@ npm start https://app.cacher.io
 
 ### Pull Requests
 
-We are happy to review any pull requests for this project, especially for new filetypes defined in 
-[config.default.js](src/config/config.default.js). Please be sure to review the 
-[contribution guidelines](CONTRIBUTING.md) before submitting your pull request.
+We are happy to review any code changes, especially for new file rules added to 
+[config.default.js](src/config/config.default.js). Please adhere to [contribution guidelines](CONTRIBUTING.md) while 
+drafting your pull request.
 
 ## Libraries Used
 
@@ -342,7 +342,7 @@ We are happy to review any pull requests for this project, especially for new fi
 - [nanoid](https://github.com/ai/nanoid) - Unique string ID generator
 - [winston](https://github.com/winstonjs/winston) - Logger for everything
 - [shelljs](https://github.com/shelljs/shelljs) - Portable Unix shell commands
-- [opn](https://github.com/sindresorhus/opn) - Beter node-open
+- [opn](https://github.com/sindresorhus/opn) - Better node-open
 - [chalk](https://github.com/chalk/chalk) - Terminal string styling
 - [get-port](https://github.com/sindresorhus/get-port) - Get available TCP port
 
