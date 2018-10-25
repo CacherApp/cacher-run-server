@@ -329,7 +329,7 @@ Install packages and start development server:
 
 ```shell
 npm i
-npm start
+npm start https://app.cacher.io
 ```
 
 ### Pull Requests
