@@ -19,16 +19,18 @@ Demo of a [Cacher](https://www.cacher.io/) snippet file executing on a Run Serve
 
 ## Contents
 
-* [Starting the Server](#startingtheserver)
-  * [Built-in Mode]()
-  * [Standlone Mode]()
-* [Editing the Configuration]()
-  * [Rule Properties]()
-  * [Arguments]()
-  * [Testing your changes with Cacher]()
-* [Contributing]()
-* [Libraries Used]()
-* [Author / License]()
+* [Starting the Server](#starting-the-server)
+  * [Built-in Mode](#built-in-mode)
+  * [Standalone Mode](#standalone-mode)
+* [Editing the Configuration](#editing-the-configuration)
+  * [Rule Properties](#rule-properties)
+  * [Arguments](#arguments)
+  * [Testing your changes](#testing-your-changes)
+* [Contributing](#contributing)
+  * [Development](#development)
+  * [Pull Requests](#pull-requests)
+* [Libraries Used](#libraries-used)
+* [Author / License](#author-license)
 
 ## Starting the Server
 
@@ -270,7 +272,7 @@ Properties:
 - `baseFilename` - The filename without the file extension. This is necessary sometimes to execute the binary. 
 (i.e. `java "${args.baseFilename}"`)
 
-### Testing your changes with Cacher
+### Testing your changes
 
 #### With built-in server on Cacher's Desktop Client
 
@@ -305,6 +307,29 @@ Make note of the server port and token, then connect with the Cacher client.
 ![Run Server Dialog](images/run-dialog.png) 
 
 ## Contributing
+
+### Development
+
+Grab the source code for this repo:
+
+```bash
+git clone git@github.com:CacherApp/cacher-run-server.git
+```
+
+Install [Typescript](https://www.npmjs.com/package/typescript) globally:
+
+```shell
+npm i -g typescript
+```
+
+Install packages and start development server:
+
+```shell
+npm i
+npm start
+```
+
+### Pull Requests
 
 We are happy to review any pull requests for this project, especially for new filetypes defined in 
 [config.default.js](src/config/config.default.js). Please be sure to review the 
