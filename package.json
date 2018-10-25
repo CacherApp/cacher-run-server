@@ -17,13 +17,13 @@
   "homepage": "https://github.com/cacherapp/cacher-run-server",
   "bugs": "https://github.com/cacherapp/cacher-run-server/issues",
   "devDependencies": {
+    "tslint": "^5.11.0"
+  },
+  "dependencies": {
     "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.117",
     "@types/node": "^10.12.0",
     "@types/socket.io": "^1.4.38",
-    "tslint": "^5.11.0"
-  },
-  "dependencies": {
     "chalk": "^2.4.1",
     "express": "^4.16.4",
     "get-port": "^4.0.0",
