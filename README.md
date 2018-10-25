@@ -1,8 +1,6 @@
 Cacher Run Server
 =================
 
-**Cacher Run Server**
-
 ![Cacher logo](images/cacher-logo.png)
 
 [![Version](https://img.shields.io/npm/v/@cacherapp/run-server.svg)](https://npmjs.org/package/@cacherapp/run-server)
