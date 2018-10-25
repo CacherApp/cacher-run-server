@@ -30,7 +30,7 @@ Demo of a [Cacher](https://www.cacher.io/) snippet file executing on a Run Serve
   * [Development](#development)
   * [Pull Requests](#pull-requests)
 * [Libraries Used](#libraries-used)
-* [Author / License](#author-license)
+* [Author / License](#author--license)
 
 ## Starting the Server
 
