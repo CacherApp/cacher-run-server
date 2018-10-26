@@ -212,6 +212,7 @@ export class RunServer {
       server.listen(this.port, () => {
         this.logger.info(`Listening on: ${chalk.bold('http://localhost:' + this.port.toString())}`);
         this.logger.info(`Server token: ${chalk.bold(this.token)}`);
+        this.logger.info(`Allow connections from origin: ${chalk.bold(this.origin)}`);
       });
 
       this.io = io;
