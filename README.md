@@ -127,7 +127,7 @@ machine. Here are some examples of functions you might add to handle new file ty
 ```javascript
 // ~/.cacher/run-server.user.config.js
 
-module.exports = {
+return {
   rules: [
     {
       pattern: '\.awesome$',
@@ -144,7 +144,7 @@ module.exports = {
 // ~/.cacher/run-server.user.config.js
 
 // Requires `npm -g markdown` to be run first.
-module.exports = {
+return {
   rules: [
     {
       pattern: '\.md$',
@@ -167,7 +167,7 @@ module.exports = {
 ```javascript
 // ~/.cacher/run-server.user.config.js
 
-module.exports = {
+return {
   rules: [
     {
       pattern: (command) => {
