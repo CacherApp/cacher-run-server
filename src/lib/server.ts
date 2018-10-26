@@ -3,6 +3,7 @@ import * as express from 'express';
 
 const os = require('os');
 const path = require('path');
+
 const shell = require('shelljs');
 const socketio = require('socket.io');
 const opn = require('opn');
@@ -123,10 +124,6 @@ export class RunServer {
         logger.info(`Copied user configuration to:\n${chalk.bold(USER_CONFIG)}\n`);
       }
     }
-
-    // Copy user config into this dir
-    const configUser = path.resolve(`${__dirname}/../config/config.user.js`);
-    shell.cp(USER_CONFIG, configUser);
   }
 
   /**

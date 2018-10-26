@@ -4,6 +4,7 @@ import { ChildProcess, spawn } from 'child_process';
 
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
 import * as _ from 'lodash';
 import * as os from 'os';
@@ -13,6 +14,7 @@ import chalk from 'chalk'
 const pretty = require('js-object-pretty-print').pretty;
 
 const WORK_DIR = path.resolve(`${os.homedir()}/.cacher/run`);
+const USER_CONFIG = path.resolve(`${os.homedir()}/.cacher/run-server.user.config.js`);
 
 export class ExecCommand {
   /**
@@ -50,7 +52,12 @@ export class ExecCommand {
     this.logger = args.logger;
 
     const defaultConfig = require('../config/config.default.js');
-    const userConfig = require('../config/config.user.js');
+
+    // Read userConfig from external file
+    const configUserScript = fs.readFileSync(USER_CONFIG).toString();
+    const userConfig = vm.runInThisContext(
+      configUserScript
+    )(require);
 
     // Prepend user config rules to default config
     const config = Object.assign({}, defaultConfig);
