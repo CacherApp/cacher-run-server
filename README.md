@@ -119,13 +119,13 @@ this config is copied to the Cacher directory as `~/.cacher/run-server.config.js
 you would like to add a file handler to this config (and let everyone use it), please submit a pull request instead. See 
 the [Contributing](#contributing) section below.
 
-- **`~/.cacher/run-server.user.config.js`** - Edit this file to add or overwrite file extension handlers on your local 
+- **`~/.cacher/run-server.user-config.js`** - Edit this file to add or overwrite file extension handlers on your local 
 machine. Here are some examples of functions you might add to handle new file types:
 
 **Add command for `.awesome` file extension.**
 
 ```javascript
-// ~/.cacher/run-server.user.config.js
+// ~/.cacher/run-server.user-config.js
 
 return {
   rules: [
@@ -141,7 +141,7 @@ return {
 **Compile `.md` (Markdown) file into HTML, then display in default browser.**
 
 ```javascript
-// ~/.cacher/run-server.user.config.js
+// ~/.cacher/run-server.user-config.js
 
 // Requires `npm -g markdown` to be run first.
 return {
@@ -165,7 +165,7 @@ return {
 **Match Javascript files by `.js` extension and file content. Calls `nvm use [version]` before execution.**
 
 ```javascript
-// ~/.cacher/run-server.user.config.js
+// ~/.cacher/run-server.user-config.js
 
 return {
   rules: [

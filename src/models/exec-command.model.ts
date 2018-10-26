@@ -26,5 +26,10 @@ export interface ExecCommandModel {
   /**
    * The Winston Logger. (https://github.com/winstonjs/winston)
    */
-  logger: Logger
+  logger: Logger,
+
+  /**
+   * User configuration based on `~/.cacher/run-server.user-config.js`.
+   */
+  userConfig: any
 }

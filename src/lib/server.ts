@@ -3,6 +3,7 @@ import * as express from 'express';
 
 const os = require('os');
 const path = require('path');
+const vm = require('vm');
 
 const shell = require('shelljs');
 const socketio = require('socket.io');
@@ -22,8 +23,10 @@ import { ExecCommand } from './exec-command';
 
 const WORK_DIR = path.resolve(`${os.homedir()}/.cacher/run`);
 const LOGS_DIR = path.resolve(`${os.homedir()}/.cacher/logs`);
-const USER_CONFIG = path.resolve(`${os.homedir()}/.cacher/run-server.user.config.js`);
+const USER_CONFIG_FILE = path.resolve(`${os.homedir()}/.cacher/run-server.user-config.js`);
 const LOG_FILE = path.resolve(`${LOGS_DIR}/run-server.log`);
+
+let USER_CONFIG = { rules: [] };
 
 export class RunServer {
   /**
@@ -51,9 +54,9 @@ export class RunServer {
     RunServer.setup();
 
     if (editor) {
-      shell.exec(`${editor} ${USER_CONFIG}`);
+      shell.exec(`${editor} ${USER_CONFIG_FILE}`);
     } else {
-      opn(USER_CONFIG);
+      opn(USER_CONFIG_FILE);
     }
   }
 
@@ -115,15 +118,20 @@ export class RunServer {
       }
     }
 
-    if (!fs.existsSync(USER_CONFIG)) {
+    if (!fs.existsSync(USER_CONFIG_FILE)) {
       const configExample =
         path.resolve(`${__dirname}/../config/user-config.example.js`);
-      shell.cp(configExample, USER_CONFIG);
+      shell.cp(configExample, USER_CONFIG_FILE);
 
       if (logger) {
-        logger.info(`Copied user configuration to:\n${chalk.bold(USER_CONFIG)}\n`);
+        logger.info(`Copied user configuration to:\n${chalk.bold(USER_CONFIG_FILE)}\n`);
       }
     }
+
+    USER_CONFIG =
+      vm.runInThisContext(
+        fs.readFileSync(USER_CONFIG_FILE).toString()
+      )(require);
   }
 
   /**
@@ -153,7 +161,7 @@ export class RunServer {
    * Start the Run Server on the provided port.
    */
   public start() {
-    (async() => {
+    (async () => {
       const app = express();
       const server = http.createServer(app);
 
@@ -199,7 +207,8 @@ export class RunServer {
             socket,
             port: this.port,
             token: this.token,
-            logger: this.logger
+            logger: this.logger,
+            userConfig: USER_CONFIG
           });
 
           exec.call();
