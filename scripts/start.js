@@ -5,7 +5,9 @@
 const RunServer = require('../dist/lib/server').RunServer;
 
 if (!process.argv[2]) {
-  console.error('Must provide "origin" as first argument');
+  console.error(
+    'Must provide "origin" as first argument. Use "file://" with Cacher Desktop, "https://app.cacher.io" for Web App.'
+  );
   process.exit(1);
 }
 
