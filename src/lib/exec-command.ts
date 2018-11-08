@@ -1,6 +1,6 @@
 import { ClientCommandModel, ExecCommandModel } from '../models';
 import { Socket } from 'socket.io';
-import { ChildProcess } from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 
 const fs = require('fs');
 const path = require('path');
@@ -11,8 +11,9 @@ import { Logger } from 'winston';
 import chalk from 'chalk'
 
 const pretty = require('js-object-pretty-print').pretty;
-const spawn = require('spawn-default-shell').spawn;
+const defaultShell = require('spawn-default-shell');
 
+const IS_WINDOWS = os.platform() === 'win32';
 const WORK_DIR = path.resolve(`${os.homedir()}/.cacher/run`);
 
 // Allows for more code to execute concurrently
@@ -96,7 +97,7 @@ export class ExecCommand {
         path.resolve(`${os.homedir()}/.cacher/run-server.user-config.js`);
       const noCmdMessage =
         `Error: Could not find a rule that matches filename '${this.clientCommand.file.filename}'. Please add one to: ${userConfigFile}.`;
-      return spawn(`echo "${noCmdMessage}" && exit 127`);
+      return this.spawn(`echo "${noCmdMessage}" && exit 127`);
     }
 
     this.verboseLogCommand(cmd);
@@ -121,7 +122,7 @@ export class ExecCommand {
     args['baseFilename'] = path.parse(filepath).name;
 
     const commandStr = cmd.run(this.clientCommand, filepath, args);
-    return spawn(commandStr);
+    return this.spawn(commandStr);
   }
 
   private handleEvents(process: ChildProcess) {
@@ -159,6 +160,15 @@ export class ExecCommand {
         process.kill();
       }
     });
+  }
+
+  private spawn(commandStr: string) {
+    // Use login shell for macOS + Linux
+    if (IS_WINDOWS) {
+      return spawn(commandStr, [], { shell: true });
+    } else {
+      return defaultShell.spawn(commandStr);
+    }
   }
 
   private verboseLogCommand(cmd: any) {
