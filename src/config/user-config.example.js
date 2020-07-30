@@ -3,7 +3,7 @@
  * Use them to append to or override existing rules.
  * View ~/.cacher/run-server.config.js to see how the default rules are defined.
  *
- * See https://github.com/cacherapp/cacher-run-server/README.md
+ * See https://github.com/CacherApp/cacher-run-server/blob/master/README.md
  * for complete documentation.
  */
 
